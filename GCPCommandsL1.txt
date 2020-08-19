@@ -1,0 +1,54 @@
+gcloud config list account
+gcloud config list project
+
+gcloud config set compute/zone [YOUR_ZONE]
+gcloud config set compute/zone northamerica
+
+gcloud config list
+
+
+// CLONE THE FRONTEND
+cd ~/
+git clone https://github.com/saturnism/spring-cloud-gcp-guestbook.git
+
+
+//CLONE THE BACKEND
+cp -a ~/spring-cloud-gcp-guestbook/1-bootstrap/guestbook-service \
+  ~/guestbook-service
+
+
+//RUN THE BACKEND APPLICATION
+cd ~/guestbook-service
+./mvnw -q spring-boot:run -Dserver.port=8081
+
+
+curl http://localhost:8081/guestbookMessages
+
+
+//TEST TO VIEW ALL MESSAGES THROUGH BACKEND
+curl -s http://localhost:8081/guestbookMessages
+
+
+//TO VIEW ONLY NAME AND MESSAGES FROM JSON 
+curl -s http://localhost:8081/guestbookMessages \
+  | jq -r '._embedded.guestbookMessages[] | {name: .name, message: .message}'
+
+
+//POST A NEW ENTRY
+curl -XPOST -H "content-type: application/json" \
+  -d '{"name": "Ray", "message": "Hello"}' \
+  http://localhost:8081/guestbookMessages
+
+
+//GET ALL MESSAGES
+curl http://localhost:8081/guestbookMessages
+
+
+//RUN THE FRONTEND APPLICATION
+cp -a ~/spring-cloud-gcp-guestbook/1-bootstrap/guestbook-frontend \
+  ~/guestbook-frontend
+
+
+//RUN ON PORT 8080
+cd ~/guestbook-frontend
+./mvnw -q spring-boot:run
