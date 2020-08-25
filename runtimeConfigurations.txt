@@ -1,0 +1,35 @@
+//CREATE ENVIRONMENT VARIABLES
+export PROJECT_ID=$(gcloud config list --format 'value(core.project)')
+gsutil ls gs://$PROJECT_ID
+gsutil -m cp -r gs://$PROJECT_ID/* ~/
+
+//MAVEN RAPPER SCRIPTS EXECUTABLE
+chmod +x ~/guestbook-frontend/mvnw
+chmod +x ~/guestbook-service/mvnw
+
+//UPDATE POM.XML
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter-trace</artifactId>
+        </dependency>
+        <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-gcp-starter-config</artifactId>
+            <version>1.2.0.RC2</version>
+        </dependency>
+
+//INSERT REPOSITORIES
+<repositories>
+         <repository>
+              <id>spring-milestones</id>
+              <name>Spring Milestones</name>
+              <url>https://repo.spring.io/milestone</url>
+              <snapshots>
+                  <enabled>false</enabled>
+              </snapshots>
+         </repository>
+    </repositories>
